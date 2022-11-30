@@ -1,0 +1,30 @@
+server:
+  port: 9998
+  servlet:
+    context-path: /spring-template
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: false
+    metrics:
+      enabled: false
+    prometheus:
+      enabled: false
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: spring-template
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.qax.tsoc.datapumpservice: debug
