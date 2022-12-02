@@ -24,15 +24,15 @@ public class AuditAspect {
 
     @AfterReturning(value = "pointcut() && @annotation(annotation)", returning = "result")
     public void changeState(JoinPoint joinPoint, Object result, Audit annotation) throws IllegalAccessException, InstantiationException {
-        SendAuditHandler sendAuditHandler = annotation.returnHandler().newInstance();
-        String message = sendAuditHandler.handler(joinPoint.getArgs(), result);
+        AuditHandler auditHandler = annotation.returnHandler().newInstance();
+        String message = auditHandler.handler(joinPoint.getArgs(), result);
         log.info("AuditAspect AfterReturning#changeState => {}", message);
     }
 
     @AfterThrowing(value = "pointcut() && @annotation(annotation)")
     public void changeState(JoinPoint joinPoint, Audit annotation) throws IllegalAccessException, InstantiationException {
-        SendAuditHandler sendAuditHandler = annotation.returnHandler().newInstance();
-        String message = sendAuditHandler.handler(joinPoint.getArgs(), null);
+        AuditHandler auditHandler = annotation.returnHandler().newInstance();
+        String message = auditHandler.handler(joinPoint.getArgs(), null);
         log.info("AuditAspect AfterThrowing#changeState => {}", message);
     }
 

@@ -1,8 +1,56 @@
 package com.caijuan.java8;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class Java8Tester {
+
+
+    public static void printLine(){
+        System.out.println("\n--------------------------------------\n");
+    }
+
+    public static class StringJoinerDome{
+        /**
+         * https://www.runoob.com/java/java8-optional-class.html
+         */
+        public static void main(String[] args) {
+            StringJoiner sj1 = new StringJoiner(",");
+            System.out.println("sj1('') => " + sj1);
+            System.out.println(sj1.add("a").add("b").add("c"));
+
+            StringJoiner sj2 = new StringJoiner(",", "[", "]");
+            System.out.println("sj2 => " + sj2);
+            System.out.println(sj2.add("a").add("b").add("c"));
+
+            StringJoiner tmp = sj1.merge(sj2);
+            System.out.println("tmp => " + tmp + ", sj1 => " + sj1 + ", sj2 => " + sj2);
+
+            tmp = sj2.merge(sj1);
+            System.out.println("tmp => " + tmp + ", sj2 => " + sj2 + ", sj1 => " + sj1);
+
+            System.out.println(sj1.length());
+
+            printLine();
+
+            // 第一个参数是分隔符，第二个参数是list
+            System.out.println(String.join(",", Arrays.asList("a", "b", "c")));
+            // 第二个参数是可变数组
+            System.out.println(String.join(",", "a", "b", "c"));
+
+            printLine();
+
+            List<String> list1 = Arrays.asList("a", "b", "c");
+            System.out.println(list1.stream().collect(Collectors.joining(",")));
+
+            List<String> list2 = Arrays.asList("a", "b", "c");
+            System.out.println(list2.stream().collect(Collectors.joining(",", "[", "]")));
+
+        }
+    }
 
     /**
      * https://www.runoob.com/java/java8-optional-class.html

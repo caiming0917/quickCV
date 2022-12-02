@@ -9,6 +9,10 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * 修改BeanDefinition对象中的属性，通过 BeanFactoryPostProcessor 修改；
+ * 在postProcessBeanFactory方法中，可以获取BeanDefinition的相关对象，并且修改该对象的属性
+ */
 @Slf4j
 @Component
 public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {

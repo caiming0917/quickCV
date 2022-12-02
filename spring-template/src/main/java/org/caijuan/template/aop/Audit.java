@@ -8,8 +8,8 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 public @interface Audit {
     // 正常返回的方法
-    Class<? extends SendAuditHandler> returnHandler() default DefaultHandler.class;
+    Class<? extends AuditHandler> returnHandler() default DefaultHandler.class;
 
     // 抛出异常的方法
-    Class<? extends SendAuditHandler> exceptionHandler() default DefaultHandler.class;
+    Class<? extends AuditHandler> exceptionHandler() default DefaultHandler.class;
 }
