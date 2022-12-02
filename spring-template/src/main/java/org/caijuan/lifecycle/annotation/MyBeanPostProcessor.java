@@ -1,4 +1,4 @@
-package org.caijuan.lifecycle;
+package org.caijuan.lifecycle.annotation;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -9,7 +9,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		if(beanName.equals("springBean")) {
-			System.out.println("postProcessBeforeInitialization");
+			System.out.println("5、postProcessBeforeInitialization");
 		}
 		return bean;
 	}
@@ -17,7 +17,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if(beanName.equals("springBean")) {
-			System.out.println("postProcessAfterInitialization");
+			System.out.println("8、postProcessAfterInitialization");
 		}
 		return bean;
 	}

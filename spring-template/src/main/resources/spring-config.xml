@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="myBeanPostProcessor" class="org.caijuan.lifecycle.xml.MyBeanPostProcessor" />
+    <bean name="personBean" class="org.caijuan.lifecycle.xml.PersonBean"
+          init-method="init" destroy-method="destroyMethod">
+        <property name="no" value= "80669865"/>
+        <property name="name" value="张sandy" />
+    </bean>
+    <bean name="personBeanV2" class="org.caijuan.lifecycle.xml.PersonBeanV2"
+          init-method="init" destroy-method="destroyMethod">
+        <property name="no" value= "34569865"/>
+        <property name="name" value="张san" />
+    </bean>
+
+</beans>
