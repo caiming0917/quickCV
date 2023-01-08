@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.caijuan.springmybatis.mapper.UserMapper">
+
+
+    <!--2.查询数据-->
+    <resultMap id="UserResultMap" type="com.caijuan.springmybatis.model.User">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="monitor_notice" property="monitorNotice" jdbcType="OTHER"
+                typeHandler="com.caijuan.springmybatis.mapper.handler.JSONTypeHandlerPg"/>
+    </resultMap>
+
+    <sql id="selectFields">
+        id, user_name, age, email, monitor_notice
+    </sql>
+
+    <sql id="insertFields">
+        id, user_name, age, email, monitor_notice
+    </sql>
+
+    <select id="selectById" resultType="com.caijuan.springmybatis.model.User" resultMap="UserResultMap">
+        select
+        <include refid="selectFields"></include>
+        from public.user
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.caijuan.springmybatis.model.User">
+        insert into public.user(<include refid="insertFields"></include>)
+        values(#{id},#{userName},#{age},#{email},
+               #{monitorNotice,jdbcType=OTHER,typeHandler=com.caijuan.springmybatis.mapper.handler.JSONTypeHandlerPg})
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,31 @@
+server:
+  port: 8088
+
+# \u6570\u636E\u6E90\u914D\u7F6E
+spring:
+  # \u6570\u636E\u6E90\u914D\u7F6E
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ngsoc
+    username: postgres
+    password: root
+
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+
+# spring \u76D1\u63A7
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# MyBatis \u914D\u7F6E
+mybatis:
+  mapperLocations: classpath:mapper/*Mapper.xml
+  typeAliasesPackage: com.caijuan.springmybatis.model.User
+  configuration:
+    mapUnderscoreToCamelCase: true
