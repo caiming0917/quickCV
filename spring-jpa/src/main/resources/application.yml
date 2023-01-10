@@ -1,0 +1,28 @@
+server:
+  port: 8093
+
+# \u6570\u636E\u6E90\u914D\u7F6E
+spring:
+  # \u6570\u636E\u6E90\u914D\u7F6E
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ngsoc
+    username: postgres
+    password: root
+
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+  jpa:
+    show-sql: true # \u6253\u5370 SQL \u3002\u751F\u4EA7\u73AF\u5883\uFF0C\u5EFA\u8BAE\u5173\u95ED
+    # Hibernate \u914D\u7F6E\u5185\u5BB9\uFF0C\u5BF9\u5E94 HibernateProperties \u7C7B
+    hibernate:
+      ddl-auto: none
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
