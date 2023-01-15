@@ -1,4 +1,4 @@
-package com.caijuan.completable.userThread;
+package com.caijuan.completable.xiaohui.userThread;
 
 public class RunnableThread{
 

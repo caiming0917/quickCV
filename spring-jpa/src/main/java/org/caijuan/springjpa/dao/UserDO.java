@@ -2,7 +2,7 @@ package org.caijuan.springjpa.dao;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.caijuan.springjpa.kit.LongListType;
+//import org.caijuan.springjpa.kit.LongListType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -13,8 +13,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name = "users")
-@TypeDef(name = "longListType", typeClass = LongListType.class)
+//@Table(name = "users")
+//@TypeDef(name = "longListType", typeClass = LongListType.class)
 public class UserDO {
 
     /**
@@ -43,11 +43,11 @@ public class UserDO {
      * https://www.cnblogs.com/h-huakai/p/16574835.html
      */
     @Type(type = "longListType")
-    @Column(columnDefinition = "int[]", name = "ids", nullable = false)
+//    @Column(columnDefinition = "int[]", name = "ids", nullable = false)
     private List<Long> ids;
     /**
      * 创建时间
      */
-    @Column(name = "create_time", nullable = false)
+//    @Column(name = "create_time", nullable = false)
     private Date createTime;
 }
