@@ -1,58 +1,62 @@
 package org.caijuan.springredis.lock;
 
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.params.SetParams;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 最大的问题是可能导致误释放别人的锁
+ * 使用 Redisson 实现
  */
-public class DistributedLockV1 {
+@Slf4j
+public class RedisDistributedLockV2 {
+
     private static final String IP = "127.0.0.1";
     private static final int PORT = 6379;
 
     public static void main(String[] args) throws InterruptedException {
+
         Jedis redisClient = new Jedis(IP, PORT);
-
         String key = "num";
-        long r = redisClient.del(key);
-        System.out.println("del r : " + r);
-
-        String lock = "lock";
-        r = redisClient.del(lock);
-        System.out.println("del r : " + r);
-
-
-        // 设置过期时间
-        long time = 10L;
-        SetParams setParams = new SetParams().nx().ex(time);
         redisClient.set(key, "0");
 
+        // 1.创建配置
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://" + IP + ":" + PORT);
+        // 2.创建RedissonClient客户端
+        RedissonClient redissonClient = Redisson.create(config);
+
+        String lockKey = "lock";
         int count = 10;
         CompletableFuture[] cfs = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            final int lockV = i;
+            String lockV = String.valueOf(i);
             cfs[i] = CompletableFuture.runAsync(() -> {
                 try (Jedis jedis = new Jedis(IP, PORT)) {
+                    RLock lock = redissonClient.getLock(lockKey);
                     for (int j = 0; j < 10; j++) {
-                        // 给锁添加过期时间，加锁失败就循环重试
-                        while (!"OK".equals(jedis.set(lock, String.valueOf(lockV), setParams))) {
-                            Thread.sleep(2);
-                        }
+                        // 加锁
+                        lock.lock(30, TimeUnit.SECONDS);
                         int value = Integer.parseInt(jedis.get(key));
                         System.out.println(Thread.currentThread().getName() + ", value : " + value);
                         jedis.set(key, String.valueOf(value + 1));
-                        jedis.del(lock);
+                        // 解锁
+                        lock.unlock();
                     }
                 } catch (Exception e) {
-                    System.out.println("error : " + e.getMessage());
+                    log.info("error : " + e.getMessage());
                     e.printStackTrace();
                 }
             });
         }
-
         CompletableFuture.allOf(cfs).join();
+        redissonClient.shutdown();
+
         System.out.println("num => " + redisClient.get(key));
         redisClient.close();
     }

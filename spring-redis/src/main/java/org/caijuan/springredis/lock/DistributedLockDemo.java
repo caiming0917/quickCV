@@ -1,13 +1,15 @@
 package org.caijuan.springredis.lock;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Transaction;
 
 @Slf4j
-
-public class DistributedLockV2 {
+@Component
+public class DistributedLockDemo {
 
     private static JedisPool jedisPool;
 
@@ -23,15 +25,24 @@ public class DistributedLockV2 {
      */
     public Boolean tryLock(String scene, String myId, int maxLockSeconds) {
         Jedis jedis = null;
+        Transaction multi = null;
         try {
             jedis = getJedis();
+            // 开启事务
+            multi =  jedis.multi();
             String key = LOCK_KEY + scene;
+            // 这个不保证原子性
             Long nxResult = jedis.setnx(key, myId);
             if (nxResult.equals(1L)) {
                 jedis.expire(key, maxLockSeconds);
+                // 提交事务
+                multi.exec();
                 return true;
             }
         } catch (Exception e) {
+            //放弃事务 事务中的所有命令都不会执行
+            assert multi != null;
+            multi.discard();
             log.error("tryLock exception", e);
         } finally {
             returnResource(jedis);
@@ -86,11 +97,11 @@ public class DistributedLockV2 {
         jedisPoolConfig.setMaxTotal(10);
         String IP = "127.0.0.1";
         jedisPool = new JedisPool(jedisPoolConfig, IP,6379);
-        System.out.println(DistributedLockV2.jedisPool);
+        System.out.println(DistributedLockDemo.jedisPool);
 
         String myId = System.currentTimeMillis() + "";
         String scene = "distributedLockTest";
-        DistributedLockV2 redisService = new DistributedLockV2();
+        DistributedLockDemo redisService = new DistributedLockDemo();
         Boolean lockResult = redisService.tryLock(scene, myId, 10);
         if (lockResult) {
             Thread.sleep(3000);//do some thing
