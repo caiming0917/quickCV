@@ -7,8 +7,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-public class CreateDemo {
+public class CompletableFutureDemo {
 
     public static String completeStr(String str) {
         SmallTool.printTimeAndThread("content : " + str);
@@ -16,6 +17,39 @@ public class CreateDemo {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        demo06();
+//        demo05();
+//        demo04();
+//        demo01();
+//        demo02();
+//        demo03();
+    }
+
+    private static void demo06() {
+        CompletableFuture<Void> task1 =
+                CompletableFuture.supplyAsync(() -> {
+                    SmallTool.sleepMillis(100);
+                    SmallTool.printTimeAndThread("work  ... ");
+                    return null;
+                });
+        CompletableFuture<Void> task6 =
+                CompletableFuture.supplyAsync(() -> {
+                    SmallTool.sleepMillis(2000);
+                    SmallTool.printTimeAndThread("work  ... ");
+                    return null;
+                });
+//        CompletableFuture<Void> headerFuture = CompletableFuture.allOf(task1, task6);
+        CompletableFuture<Object> headerFuture = CompletableFuture.anyOf(task1, task6);
+
+        try {
+            headerFuture.join();
+        } catch (Exception ex) {
+            SmallTool.printTimeAndThread("work  ... ");
+        }
+        SmallTool.printTimeAndThread("done. ");
+    }
+
+    private static void demo05() throws InterruptedException, ExecutionException {
         // ------------ 连接两个计算任务
         CompletableFuture<String> future = CompletableFuture.completedFuture("hello!")
                 .thenApply(s -> s + "world!");
@@ -29,9 +63,55 @@ public class CreateDemo {
                 .thenApply(s -> s + "world!").thenApply(s -> s + "nice!");
         assertEquals("hello!world!nice!", future.get());
 
-//        demo01();
-//        demo02();
-//        demo03();
+        // 在于 thenRun() 不能访问异步计算的结果
+        CompletableFuture.completedFuture("hello!")
+                .thenApply(s -> s + "world!").thenApply(s -> s + "nice!").thenAccept(System.out::println);//hello!world!nice!
+        CompletableFuture.completedFuture("hello!")
+                .thenApply(s -> s + "world!").thenApply(s -> s + "nice!").thenRun(() -> System.out.println("hello!"));//hello!
+    }
+
+    private static void demo04() throws InterruptedException, ExecutionException {
+        // whenComplete 用来计算异常
+        CompletableFuture<String> future01 = CompletableFuture.supplyAsync(() -> "hello!")
+                .whenComplete((res, ex) -> {
+                    // res 代表返回的结果
+                    // ex 的类型为 Throwable ，代表抛出的异常
+                    System.out.println(res);
+                    // 这里没有抛出异常所有为 null
+                    assertNull(ex);
+                });
+        assertEquals("hello!", future01.get());
+
+        // handle 用来处理异常
+        CompletableFuture<String> future02 = CompletableFuture.supplyAsync(() -> {
+            if (true) {
+                throw new RuntimeException("Computation error!");
+            }
+            return "hello!";
+        }).handle((res, ex) -> {
+            // res 代表返回的结果
+            // ex 的类型为 Throwable ，代表抛出的异常
+            return res != null ? res : "world!";
+        });
+        assertEquals("world!", future02.get());
+
+        CompletableFuture<String> future03
+                = CompletableFuture.supplyAsync(() -> {
+            if (true) {
+                throw new RuntimeException("Computation error!");
+            }
+            return "hello!";
+        }).exceptionally(ex -> {
+            System.out.println(ex.toString());// CompletionException
+            return "world!";
+        });
+        assertEquals("world!", future03.get());
+
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+        completableFuture.completeExceptionally(
+                new RuntimeException("Calculation failed!"));
+        completableFuture.get(); // ExecutionException
+
     }
 
     private static void demo03() throws InterruptedException, ExecutionException {
