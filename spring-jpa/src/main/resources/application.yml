@@ -5,7 +5,7 @@ server:
 spring:
   # \u6570\u636E\u6E90\u914D\u7F6E
   datasource:
-    url: jdbc:postgresql://localhost:5432/ngsoc
+    url: jdbc:postgresql://localhost:5432/study
     username: postgres
     password: root
 

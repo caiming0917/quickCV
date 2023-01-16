@@ -27,4 +27,4 @@ spring:
 logging:
   config: classpath:logback-spring.xml
   level:
-    com.qax.tsoc.datapumpservice: debug
+    com.caijuan: debug

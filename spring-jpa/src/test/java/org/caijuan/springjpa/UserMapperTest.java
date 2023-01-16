@@ -1,7 +1,7 @@
 package org.caijuan.springjpa;
 
 import org.caijuan.springjpa.dao.UserDO;
-import org.caijuan.springjpa.dao.UserRepository;
+//import org.caijuan.springjpa.dao.UserRepository;
 import org.caijuan.springjpa.dao.UserRepository01;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
