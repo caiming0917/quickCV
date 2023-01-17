@@ -1,4 +1,4 @@
-package com.caijuan.java8.collectorsDemo;
+package com.caijuan.java8.collectorsdemo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
