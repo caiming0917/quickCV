@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 //import org.caijuan.springjpa.kit.LongListType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import com.vladmihalcea.hibernate.type.array.LongArrayType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,8 +14,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Entity
-//@Table(name = "users")
-//@TypeDef(name = "longListType", typeClass = LongListType.class)
+@Table(name = "users")
+@TypeDef(name = "long-array", typeClass = LongArrayType.class)
 public class UserDO {
 
     /**
@@ -42,8 +43,8 @@ public class UserDO {
      * @OneToMany
      * https://www.cnblogs.com/h-huakai/p/16574835.html
      */
-    @Type(type = "longListType")
-//    @Column(columnDefinition = "int[]", name = "ids", nullable = false)
+    @Column(name = "classify_ids",columnDefinition = "long[]")
+    @Type(type = "long-array")
     private List<Long> ids;
     /**
      * 创建时间
