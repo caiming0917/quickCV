@@ -21,6 +21,12 @@ class SpringMybatisApplicationTests {
 
     @Test
     void contextLoads() {
+//        test01();
+        List<User> users = userService.test();
+        System.out.println(users);
+    }
+
+    private void test01() {
         System.out.println(userService);
 
         User user = new User();
