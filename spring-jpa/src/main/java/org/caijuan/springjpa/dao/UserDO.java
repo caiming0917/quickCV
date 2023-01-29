@@ -2,7 +2,7 @@ package org.caijuan.springjpa.dao;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-//import org.caijuan.springjpa.kit.LongListType;
+import org.caijuan.springjpa.kit.LongListType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import com.vladmihalcea.hibernate.type.array.LongArrayType;

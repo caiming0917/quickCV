@@ -11,6 +11,7 @@
     <modules>
         <module>java-template</module>
         <module>spring-template</module>
+        <module>java-queue</module>
     </modules>
 
     <properties>
