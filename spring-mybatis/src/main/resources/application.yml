@@ -29,3 +29,7 @@ mybatis:
   typeAliasesPackage: com.caijuan.springmybatis.model.User
   configuration:
     mapUnderscoreToCamelCase: true
+
+logging:
+  level:
+    com.caijuan.springmybatis.mapper: debug
