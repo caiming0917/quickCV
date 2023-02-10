@@ -26,10 +26,10 @@ public class RedisLockCFV2 {
         int count = 10;
         CompletableFuture[] cfs = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            cfs[i] = CompletableFuture.runAsync(()->{
+            cfs[i] = CompletableFuture.runAsync(() -> {
                 try (Jedis jedis = new Jedis(IP, PORT)) {
                     // 只有一个线程执行，其他线程不执行，程序无限循环
-                    while (lock.tryLock(10, TimeUnit.MILLISECONDS)){
+                    while (lock.tryLock(10, TimeUnit.MILLISECONDS)) {
                         lock.lock();
                         for (int j = 0; j < 10; j++) {
                             int value = Integer.parseInt(jedis.get(key));

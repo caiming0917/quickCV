@@ -5,15 +5,15 @@ import redis.clients.jedis.params.SetParams;
 
 import java.util.concurrent.CompletableFuture;
 
+import static org.caijuan.springredis.lock.RedisConstant.*;
+
 /**
  * 最大的问题是可能导致误释放别人的锁
  */
 public class DistributedLockV1 {
-    private static final String IP = "127.0.0.1";
-    private static final int PORT = 6379;
 
     public static void main(String[] args) throws InterruptedException {
-        Jedis redisClient = new Jedis(IP, PORT);
+        Jedis redisClient = getRedisClient();
 
         String key = "num";
         long r = redisClient.del(key);
@@ -34,7 +34,7 @@ public class DistributedLockV1 {
         for (int i = 0; i < count; i++) {
             final int lockV = i;
             cfs[i] = CompletableFuture.runAsync(() -> {
-                try (Jedis jedis = new Jedis(IP, PORT)) {
+                try (Jedis jedis = getRedisClient()) {
                     for (int j = 0; j < 10; j++) {
                         // 给锁添加过期时间，加锁失败就循环重试
                         while (!"OK".equals(jedis.set(lock, String.valueOf(lockV), setParams))) {

@@ -6,13 +6,13 @@ import redis.clients.jedis.Jedis;
 
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import static org.caijuan.springredis.lock.RedisConstant.*;
 
 /**
  * 不支持自动续期
  */
-public class DistributedLock {
-    private static final String IP = "127.0.0.1";
-    private static final int PORT = 6379;
+public class DistributedLockV2 {
+
 
     // 预加载脚本，避免频繁读取脚本。同时lock.lua文件需要放在resources下
     public static final DefaultRedisScript<Integer> luaScript;
@@ -28,7 +28,7 @@ public class DistributedLock {
         String key = "num";
         String lock = "lock";
 
-        Jedis redisClient = new Jedis(IP, PORT);
+        Jedis redisClient = getRedisClient();
         long r = redisClient.del(key);
         System.out.println("del r : " + r);
         // 清除锁
@@ -42,7 +42,7 @@ public class DistributedLock {
         for (int i = 0; i < count; i++) {
             final int lockV = i;
             cfs[i] = CompletableFuture.runAsync(() -> {
-                try (Jedis jedis = new Jedis(IP, PORT)) {
+                try (Jedis jedis = getRedisClient()) {
                     for (int j = 0; j < 10; j++) {
 
                         // 加锁失败就循环重试

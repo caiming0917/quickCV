@@ -4,7 +4,7 @@ server:
 spring:
   redis:
     # \u5730\u5740
-    host: localhost
+    host:
     # \u7AEF\u53E3\uFF0C\u9ED8\u8BA4\u4E3A6379
     port: 6379
     # \u6570\u636E\u5E93\u7D22\u5F15
