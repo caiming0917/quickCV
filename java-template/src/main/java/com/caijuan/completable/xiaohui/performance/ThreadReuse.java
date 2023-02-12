@@ -1,6 +1,6 @@
 package com.caijuan.completable.xiaohui.performance;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.SynchronousQueue;
@@ -13,8 +13,8 @@ public class ThreadReuse {
                 0, TimeUnit.MILLISECONDS,
                 new SynchronousQueue<>());
 
-        CompletableFuture.runAsync(() -> SmallTool.printTimeAndThread("A"), executor)
-                .thenRunAsync(() -> SmallTool.printTimeAndThread("B"), executor)
+        CompletableFuture.runAsync(() -> SmallTool.info("A"), executor)
+                .thenRunAsync(() -> SmallTool.info("B"), executor)
                 .join();
     }
 }

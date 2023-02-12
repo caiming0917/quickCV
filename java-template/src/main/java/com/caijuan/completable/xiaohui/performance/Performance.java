@@ -1,19 +1,19 @@
 package com.caijuan.completable.xiaohui.performance;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 public class Performance {
     public static void main(String[] args) {
-        SmallTool.printTimeAndThread("线程数：" + Runtime.getRuntime().availableProcessors());
+        SmallTool.info("线程数：" + Runtime.getRuntime().availableProcessors());
 
-        SmallTool.printTimeAndThread("小白和朋友来了餐厅");
+        SmallTool.info("小白和朋友来了餐厅");
 
 
         int count = 58;
-        SmallTool.printTimeAndThread("三个人点了 " + count + " 盘菜");
+        SmallTool.info("三个人点了 " + count + " 盘菜");
 
 
         ArrayList<CompletableFuture<Void>> futures = new ArrayList<>();
@@ -29,6 +29,6 @@ public class Performance {
         }
         long needTime = System.currentTimeMillis() - start;
 
-        SmallTool.printTimeAndThread("\n\n做" + count + "道菜耗时：" + needTime + "\n");
+        SmallTool.info("\n\n做" + count + "道菜耗时：" + needTime + "\n");
     }
 }

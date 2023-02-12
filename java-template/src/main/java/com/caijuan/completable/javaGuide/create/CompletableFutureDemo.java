@@ -1,6 +1,6 @@
 package com.caijuan.completable.javaGuide.create;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 import org.junit.Assert;
 
 import java.util.concurrent.CompletableFuture;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
 public class CompletableFutureDemo {
 
     public static String completeStr(String str) {
-        SmallTool.printTimeAndThread("content : " + str);
+        SmallTool.info("content : " + str);
         return "string :" + str;
     }
 
@@ -29,13 +29,13 @@ public class CompletableFutureDemo {
         CompletableFuture<Void> task1 =
                 CompletableFuture.supplyAsync(() -> {
                     SmallTool.sleepMillis(100);
-                    SmallTool.printTimeAndThread("work  ... ");
+                    SmallTool.info("work  ... ");
                     return null;
                 });
         CompletableFuture<Void> task6 =
                 CompletableFuture.supplyAsync(() -> {
                     SmallTool.sleepMillis(2000);
-                    SmallTool.printTimeAndThread("work  ... ");
+                    SmallTool.info("work  ... ");
                     return null;
                 });
 //        CompletableFuture<Void> headerFuture = CompletableFuture.allOf(task1, task6);
@@ -44,9 +44,9 @@ public class CompletableFutureDemo {
         try {
             headerFuture.join();
         } catch (Exception ex) {
-            SmallTool.printTimeAndThread("work  ... ");
+            SmallTool.info("work  ... ");
         }
-        SmallTool.printTimeAndThread("done. ");
+        SmallTool.info("done. ");
     }
 
     private static void demo05() throws InterruptedException, ExecutionException {
@@ -131,32 +131,32 @@ public class CompletableFutureDemo {
     private static void demo02() throws InterruptedException, ExecutionException {
         // 已经知道计算的结果的话，可以使用静态方法 completedFuture() 来创建 CompletableFuture
         CompletableFuture<String> resultFuture = CompletableFuture.completedFuture(completeStr("hello"));
-        SmallTool.printTimeAndThread("isDone1 => " + resultFuture.isDone());
+        SmallTool.info("isDone1 => " + resultFuture.isDone());
 
         // 调用 get() 方法的线程会阻塞直到 CompletableFuture 完成运算
         resultFuture.complete(completeStr("hello 1"));
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.get());
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.isDone());
+        SmallTool.info("isDone2 => " + resultFuture.get());
+        SmallTool.info("isDone2 => " + resultFuture.isDone());
 
         // complete() 方法只能调用一次，后续调用将被忽略
         resultFuture.complete(completeStr("hello 2"));
-        SmallTool.printTimeAndThread("isDone3 => " + resultFuture.isDone());
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.get());
+        SmallTool.info("isDone3 => " + resultFuture.isDone());
+        SmallTool.info("isDone2 => " + resultFuture.get());
     }
 
     // new CompletableFuture & get/isDone
     private static void demo01() throws InterruptedException, ExecutionException {
         CompletableFuture<String> resultFuture = new CompletableFuture<>();
-        SmallTool.printTimeAndThread("isDone1 => " + resultFuture.isDone());
+        SmallTool.info("isDone1 => " + resultFuture.isDone());
 
         // 调用 get() 方法的线程会阻塞直到 CompletableFuture 完成运算
         resultFuture.complete(completeStr("hello 1"));
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.get());
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.isDone());
+        SmallTool.info("isDone2 => " + resultFuture.get());
+        SmallTool.info("isDone2 => " + resultFuture.isDone());
 
         // complete() 方法只能调用一次，后续调用将被忽略
         resultFuture.complete(completeStr("hello 2"));
-        SmallTool.printTimeAndThread("isDone3 => " + resultFuture.isDone());
-        SmallTool.printTimeAndThread("isDone2 => " + resultFuture.get());
+        SmallTool.info("isDone3 => " + resultFuture.isDone());
+        SmallTool.info("isDone2 => " + resultFuture.get());
     }
 }

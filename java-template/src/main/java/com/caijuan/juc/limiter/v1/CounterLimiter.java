@@ -1,4 +1,4 @@
-package com.caijuan.juc.limit;
+package com.caijuan.juc.limiter.v1;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,16 +19,13 @@ public class CounterLimiter {
         count = new AtomicInteger(0);
 
         //开启一个线程，达到窗口结束时清空count
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    count.set(0);
-                    try {
-                        Thread.sleep(windowSize);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        new Thread(() -> {
+            while(true){
+                count.set(0);
+                try {
+                    Thread.sleep(windowSize);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

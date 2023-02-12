@@ -1,6 +1,6 @@
 package com.caijuan.completable.xiaohui.performance;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,12 +21,12 @@ public class Dish {
     // 做菜
     public void make() {
         SmallTool.sleepMillis(TimeUnit.SECONDS.toMillis(this.productionTime));
-        SmallTool.printTimeAndThread(this.name + " 制作完毕，来吃我吧");
+        SmallTool.info(this.name + " 制作完毕，来吃我吧");
     }
 
     // 做菜
     public void makeUseCPU() {
-        SmallTool.printTimeAndThread(this.name + " 制作完毕，来吃我吧" + compute());
+        SmallTool.info(this.name + " 制作完毕，来吃我吧" + compute());
     }
 
     /**

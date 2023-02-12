@@ -1,6 +1,6 @@
 package com.caijuan.completable.xiaohui.performance;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -10,12 +10,12 @@ import java.util.stream.IntStream;
 public class PerformanceV3 {
     public static void main(String[] args) {
 
-        SmallTool.printTimeAndThread("小白和朋友来了餐厅");
+        SmallTool.info("小白和朋友来了餐厅");
         ExecutorService threadPool = Executors.newCachedThreadPool();
 
 
         int count = 39;
-        SmallTool.printTimeAndThread("三个人点了 " + count + " 盘菜");
+        SmallTool.info("三个人点了 " + count + " 盘菜");
 
         long start = System.currentTimeMillis();
         CompletableFuture[] futures = IntStream.rangeClosed(1, count)
@@ -30,6 +30,6 @@ public class PerformanceV3 {
         long needTime = System.currentTimeMillis() - start;
         threadPool.shutdown();
 
-        SmallTool.printTimeAndThread("\n\n做" + count + "道菜耗时：" + needTime + "\n");
+        SmallTool.info("\n\n做" + count + "道菜耗时：" + needTime + "\n");
     }
 }

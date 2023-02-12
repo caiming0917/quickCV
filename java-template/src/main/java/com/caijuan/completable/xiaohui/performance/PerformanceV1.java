@@ -1,6 +1,6 @@
 package com.caijuan.completable.xiaohui.performance;
 
-import com.caijuan.completable.SmallTool;
+import com.caijuan.utils.SmallTool;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 public class PerformanceV1 {
     public static void main(String[] args) {
 
-        SmallTool.printTimeAndThread("小白和朋友来了餐厅");
+        SmallTool.info("小白和朋友来了餐厅");
 
 
 
@@ -16,7 +16,7 @@ public class PerformanceV1 {
         // -Djava.util.completable.ForkJoinPool.common.parallelism=8
         System.setProperty("java.util.completable.ForkJoinPool.common.parallelism", "19");
 
-        SmallTool.printTimeAndThread("三个人点了 " + count + " 盘菜");
+        SmallTool.info("三个人点了 " + count + " 盘菜");
 
 
         ArrayList<CompletableFuture<Void>> futures = new ArrayList<>();
@@ -35,6 +35,6 @@ public class PerformanceV1 {
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         long needTime = System.currentTimeMillis() - start;
 
-        SmallTool.printTimeAndThread("\n\n做" + count + "道菜耗时：" + needTime + "\n");
+        SmallTool.info("\n\n做" + count + "道菜耗时：" + needTime + "\n");
     }
 }

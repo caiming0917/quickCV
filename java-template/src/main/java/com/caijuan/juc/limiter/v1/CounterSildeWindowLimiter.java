@@ -1,4 +1,4 @@
-package com.caijuan.juc.limit;
+package com.caijuan.juc.limiter.v1;
 
 public class CounterSildeWindowLimiter {
 
@@ -24,8 +24,8 @@ public class CounterSildeWindowLimiter {
     //请求到达后先调用本方法，若返回true，则请求通过，否则限流
     public synchronized boolean tryAcquire() {
         long curTime = System.currentTimeMillis();
-        //计算滑动小窗口的数量
-        long windowsNum = Math.max(curTime - windowSize - startTime, 0) / (windowSize / splitNum);
+        //计算滑动小窗口的数量(需要往前移动的小窗口个数 = 超出的时间区间 / 小窗口单位大小)
+        long windowsNum = Math.max(curTime - startTime - windowSize, 0) / (windowSize / splitNum);
         slideWindow(windowsNum);//滑动窗口
         int count = 0;
         for (int i = 0; i < splitNum; i++) {
@@ -42,13 +42,18 @@ public class CounterSildeWindowLimiter {
     private synchronized void slideWindow(long windowsNum) {
         if (windowsNum == 0)
             return;
+        // 需要滑动的窗口个数(最多 windowsNum 个)
         long slideNum = Math.min(windowsNum, splitNum);
+//        System.out.println("index = " + index + ", counters[" + index + "] = " + counters[index]);
+        // 更新窗口通过的流量：滑进来的窗口通过的个数为0
         for (int i = 0; i < slideNum; i++) {
             index = (index + 1) % splitNum;
             counters[index] = 0;
         }
-        //更新滑动窗口时间
+        //更新滑动窗口时间 (windowSize / splitNum) => 每个窗口时间大小
         startTime = startTime + windowsNum * (windowSize / splitNum);
+//        System.out.println("startTime = " + startTime + ", windowsNum = " + windowsNum +
+//                ", slideNum = " + slideNum + ", splitNum = " + splitNum);
     }
 
     //测试
