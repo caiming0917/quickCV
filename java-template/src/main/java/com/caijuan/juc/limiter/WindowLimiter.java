@@ -20,11 +20,4 @@ public abstract class WindowLimiter implements Limiter {
         this.windowSize = windowSize;
         this.limit = limit;
     }
-
-
-    @Override
-    public abstract <T> boolean tryAcquire(Request<T> request);
-
-    @Override
-    public abstract <T> void handleRequest(Request<T> request);
 }
