@@ -33,7 +33,7 @@ public class LeakyBucketLimiter extends BucketLimiter {
                     super.handleRequest(request);
                 }
             } catch (InterruptedException e) {
-                // throw new RuntimeException("处理请求失败", e);
+                throw new RuntimeException("处理请求失败", e);
             }
         }, 10, 10, TimeUnit.MILLISECONDS);
     }
@@ -48,7 +48,9 @@ public class LeakyBucketLimiter extends BucketLimiter {
         // boolean success = this.bucket.offer(request, 1000, TimeUnit.MILLISECONDS);
         boolean success = this.bucket.offer(request);
         if (!success) {
-            // throw new RuntimeException("系统繁忙");
+            // 不能直接抛出异常，可能导致线程全部阻塞
+            throw new RuntimeException("系统繁忙");
+            // TODO : 拒绝、降级或排队
         }
     }
 }

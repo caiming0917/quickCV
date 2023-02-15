@@ -47,7 +47,7 @@ public class RequestClient {
 
 
     private static String testSendRequest(Limiter limiter) throws InterruptedException {
-        int total = 50 * 1000 * 1000;
+        int total = 50 * 1000;
         int passCount = 0;
         int failCount = 0;
         StringBuilder result = new StringBuilder();
@@ -76,7 +76,9 @@ public class RequestClient {
         result.append("ThreadName：" + Thread.currentThread().getName());
         result.append("，请求总数：total=" + total * 2);
         result.append("，通过请求数：passNum=" + passCount);
-        return result.append("，限流请求数：limitNum=" + failCount).toString();
+        result.append("，限流请求数：limitNum=" + failCount);
+        SmallTool.info(result.toString());
+        return result.toString();
     }
 
     @SneakyThrows
@@ -129,13 +131,6 @@ public class RequestClient {
             }, executor);
         }
         System.out.println("等待所有请求完成");
-
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(() -> {
-            int i = 0;
-            // System.out.println("countSum =>" + countSum.get());
-        }, 1000, 1000, TimeUnit.MILLISECONDS);
-//pool-2-thread-1-22-1676476238077-info : requestID => 100088091
         CompletableFuture.allOf(completableFutures).join();
         for (int i = 0; i < completableFutures.length; i++) {
             System.out.println(completableFutures[i].get());
