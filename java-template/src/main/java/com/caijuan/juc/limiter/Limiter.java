@@ -1,5 +1,7 @@
 package com.caijuan.juc.limiter;
 
+import com.caijuan.utils.SmallTool;
+
 import java.time.LocalTime;
 
 /**
@@ -12,6 +14,6 @@ public interface Limiter {
 
     default <T> void handleRequest(Request<T> request) {
         request.setHandleTime(LocalTime.now());
-        // SmallTool.info("requestID => " + request.getRequestId());
+        SmallTool.info("requestID => " + request.getRequestId());
     }
 }

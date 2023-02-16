@@ -47,7 +47,7 @@ public class RequestClient {
 
 
     private static String testSendRequest(Limiter limiter) throws InterruptedException {
-        int total = 50 * 1000;
+        int total = 50;
         int passCount = 0;
         int failCount = 0;
         StringBuilder result = new StringBuilder();
@@ -118,7 +118,8 @@ public class RequestClient {
 
     private static void testFunction() throws InterruptedException, ExecutionException {
         CompletableFuture<String>[] completableFutures = new CompletableFuture[10];
-        Limiter limiter = new LeakyBucketLimiter(1000, 2);
+        Limiter limiter = new TokenBucketLimiter(100000, 1);
+        // Limiter limiter = new LeakyBucketLimiter(1000, 2);
         // Limiter limiter = new CounterLimiter(1000, 20);
         // Limiter limiter = new CounterSildeWindowLimiter(1000, 100, 10);
         for (int i = 0; i < completableFutures.length; i++) {
