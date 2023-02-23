@@ -1,12 +1,12 @@
 package com.caijuan.juc.limiter;
 
 import com.caijuan.juc.threadpool.ThreadPoolFactoryUtils;
+import com.caijuan.utils.SmallTool;
 import lombok.SneakyThrows;
 
 import java.time.LocalTime;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
+import java.util.Objects;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -45,17 +45,20 @@ public class RequestClient {
     }
 
 
-    @SneakyThrows
-    private static String testSendRequest(Limiter limiter) {
-        int total = 50 * 1000 * 1000;
-        int count = 0;
+
+    private static String testSendRequest(Limiter limiter) throws InterruptedException {
+        int total = 50;
+        int passCount = 0;
+        int failCount = 0;
         StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < total; i++) {
             Request request = new Request();
             if (limiter.tryAcquire(request)) {
                 limiter.handleRequest(request);
-                count++;
+                passCount++;
+            }else {
+                failCount++;
             }
         }
         Thread.sleep(1000);
@@ -63,15 +66,19 @@ public class RequestClient {
             Request request = new Request();
             if (limiter.tryAcquire(request)) {
                 limiter.handleRequest(request);
-                count++;
+                passCount++;
+            }else {
+                failCount++;;
             }
         }
 
-        countSum.addAndGet(count);
+        countSum.addAndGet(passCount);
         result.append("ThreadName：" + Thread.currentThread().getName());
         result.append("，请求总数：total=" + total * 2);
-        result.append("，通过请求数：count=" + count);
-        return result.append("，限流请求数：limitNum=" + (total - count)).toString();
+        result.append("，通过请求数：passNum=" + passCount);
+        result.append("，限流请求数：limitNum=" + failCount);
+        SmallTool.info(result.toString());
+        return result.toString();
     }
 
     @SneakyThrows
@@ -111,11 +118,17 @@ public class RequestClient {
 
     private static void testFunction() throws InterruptedException, ExecutionException {
         CompletableFuture<String>[] completableFutures = new CompletableFuture[10];
-        Limiter limiter = new CounterLimiter(1000, 20);
+        Limiter limiter = new TokenBucketLimiter(100000, 1);
+        // Limiter limiter = new LeakyBucketLimiter(1000, 2);
+        // Limiter limiter = new CounterLimiter(1000, 20);
         // Limiter limiter = new CounterSildeWindowLimiter(1000, 100, 10);
         for (int i = 0; i < completableFutures.length; i++) {
             completableFutures[i] = CompletableFuture.supplyAsync(() -> {
-                return testSendRequest(limiter);
+                try {
+                    return testSendRequest(limiter);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }, executor);
         }
         System.out.println("等待所有请求完成");
