@@ -14,8 +14,9 @@ import java.io.IOException;
  */
 @Component
 public class XframeOptionsFilter extends OncePerRequestFilter {
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    response.setHeader("X-Frame-Options", "SAMEORIGIN");
-    filterChain.doFilter(request, response);
-  }
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+        filterChain.doFilter(request, response);
+    }
 }

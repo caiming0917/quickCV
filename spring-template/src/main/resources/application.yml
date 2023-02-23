@@ -1,7 +1,21 @@
 server:
   port: 9998
+  undertow:
+    #(NIO直接分配的堆外内存)
+    direct-buffers: true
+    threads:
+      worker: 128
+      io: 32
   servlet:
     context-path: /spring-template
+
+#  tomcat:
+#    max-connections: 20000
+#    accept-count: 1000
+#    threads:
+#      min-spare: 100
+#      max: 500
+#    max-swallow-size: -1
 
 management:
   endpoints:
