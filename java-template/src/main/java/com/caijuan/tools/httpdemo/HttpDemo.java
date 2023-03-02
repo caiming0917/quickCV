@@ -22,21 +22,22 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * @author cai juan
- * @date 2023/2/23 19:23
+ * &#064;date  2023/2/23 19:23
  */
 public class HttpDemo {
     public static void main(String[] args) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
         HttpClient client = getClient();
-        String url = "http://IP" + ":" + "port" + "/uri";
+        String url = "http://localhost" + ":" + "38080" + "/";
         HttpPost httpPost = new HttpPost(url);
         AuthRequestVo authRequestVo = new AuthRequestVo("name", "ps");
         HttpEntity httpEntity = new StringEntity(JSONObject.toJSONString(authRequestVo), Charset.forName("UTF-8"));
         httpPost.setEntity(httpEntity);
         HttpResponse response = client.execute(httpPost);
         String resultStr = EntityUtils.toString(response.getEntity());
+        System.out.println(resultStr);
     }
 
-    private static org.apache.http.client.HttpClient getClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    private static HttpClient getClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(), NoopHostnameVerifier.INSTANCE);
         CloseableHttpClient client = HttpClients.custom()
                 .setSSLSocketFactory(sslConnectionSocketFactory)
